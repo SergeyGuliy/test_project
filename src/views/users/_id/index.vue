@@ -11,6 +11,9 @@
     data(){
       return {
         user: null,
+        allUsers: [],
+        users1: null,
+        users2: null,
         loading: true,
         items: [
           {
@@ -21,7 +24,7 @@
           {
             text: 'Users List',
             disabled: false,
-            to: '',
+            href: "/users",
           },
           {
             text: 'User',
@@ -32,8 +35,12 @@
       }
     },
     async mounted() {
-      this.user = (await this.$axios.get(`https://jsonplaceholder.typicode.com/users/${this.$route.params.id}`)).data
-      console.log(this.user)
+      const users1 = (await this.$axios.get(`https://reqres.in/api/users?page=${this.page}`)).data.data;
+      const users2 = (await this.$axios.get(`https://reqres.in/api/users?page=${this.page}`)).data.data;
+      this.allUsers.push(...users1)
+      this.allUsers.push(...users2)
+      this.user = this.allUsers.find(user => user.id == this.$route.params.id)
+
     }
   }
 </script>

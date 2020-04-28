@@ -2,7 +2,9 @@
   <div>
     <v-breadcrumbs :items="items"></v-breadcrumbs>
     <router-link to="/users">List of users</router-link>
+    <br>
     <router-link :to="{ name: 'Users', query: {page: 1}}">List of users (page 1)</router-link>
+    <br>
     <router-link :to="{ name: 'Users', query: {page: 2}}">List of users (page 2)</router-link>
 
 
