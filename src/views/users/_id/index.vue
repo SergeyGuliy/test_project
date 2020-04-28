@@ -1,7 +1,22 @@
 <template>
   <div>
     <v-breadcrumbs :items="items"></v-breadcrumbs>
-    <p>User {{ $route.params.id}}</p>
+    <v-card class="user_info" v-if="pageIsLoaded">
+      <p>User {{ user.id }}</p>
+        <v-img
+                class="white--text align-end"
+                height="400px"
+                :src="user.avatar"
+        >
+          <v-card-title>{{ user.first_name }} {{ user.last_name }}</v-card-title>
+        </v-img>
+
+        <v-card-subtitle class="pb-0">User id in base {{user.id}}</v-card-subtitle>
+
+        <v-card-text class="text--primary">
+          <div>{{ user.email }}</div>
+        </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -14,7 +29,7 @@
         allUsers: [],
         users1: null,
         users2: null,
-        loading: true,
+        pageIsLoaded: false,
         items: [
           {
             text: 'Home Page',
@@ -40,9 +55,15 @@
       this.allUsers.push(...users1)
       this.allUsers.push(...users2)
       this.user = this.allUsers.find(user => user.id == this.$route.params.id)
+      this.pageIsLoaded =true
+      console.log(this.user)
 
     }
   }
 </script>
 
-<style scoped lang='sass'></style>
+<style scoped lang='sass'>
+.user_info
+  width: 80%
+  margin: 0 auto
+</style>

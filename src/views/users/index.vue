@@ -1,56 +1,61 @@
 <template>
   <div>
-    <v-breadcrumbs :items="items"></v-breadcrumbs>
-    <v-row align="center">
-      <v-col cols="6" >
-        <v-select
-                :items="counts"
-                v-model="pageSize"
-                filled
-                label="Users on page"
-                outlined
-         />
-      </v-col>
-      <v-col cols="6" >
-        <v-text-field
-                v-model="searchKey"
-                :counter="10"
-                label="First name"
-                outlined
+    <div  v-if="pageIsLoaded">
+      <v-breadcrumbs :items="items"></v-breadcrumbs>
+      <v-row align="center">
+        <v-col cols="6" >
+          <v-select
+                  :items="counts"
+                  v-model="pageSize"
+                  filled
+                  label="Users on page"
+                  outlined
+          />
+        </v-col>
+        <v-col cols="6" >
+          <v-text-field
+                  v-model="searchKey"
+                  :counter="10"
+                  label="First name"
+                  outlined
 
-        />
-      </v-col>
-      <v-col cols="1" />
+          />
+        </v-col>
+        <v-col cols="1" />
 
-    </v-row>
-    <v-simple-table
-            v-if="listFiltered.length > 0"
-    >
-      <template v-slot:default>
-        <thead>
-        <tr>
-          <th class="text-left">ID</th>
-          <th class="text-left">First name</th>
-          <th class="text-left">Last name</th>
-          <th class="text-left">E-mail</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="user in listPaginated[pageCurrent - 1]" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td>{{ user.first_name }}</td>
-          <td>{{ user.last_name }}</td>
-          <td>{{ user.email }}</td>
-        </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-    <Card v-else>Поиск не дал результата</Card>
+      </v-row>
+      <v-simple-table
+              v-if="listFiltered.length > 0"
+      >
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-left">ID</th>
+            <th class="text-left">First name</th>
+            <th class="text-left">Last name</th>
+            <th class="text-left">E-mail</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+                  v-for="user in listPaginated[pageCurrent - 1]" :key="user.id"
+                  @click='$router.push(`/users/${user.id}`)'
+          >
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+      <Card v-else>Поиск не дал результата</Card>
 
-    <v-pagination
-            v-model="pageCurrent"
-            :length="listPaginated.length"
-     />
+      <v-pagination
+              v-model="pageCurrent"
+              :length="listPaginated.length"
+      />
+    </div>
   </div>
 </template>
 
@@ -66,6 +71,7 @@
         pageSize: 6,
         allUsers: [],
         pageCurrent: null,
+        pageIsLoaded: false,
         items: [
           {
             text: 'Home Page',
@@ -106,6 +112,8 @@
       const users2 = (await this.$axios.get(`https://reqres.in/api/users?page=2`)).data.data;
       this.allUsers.push(...users1)
       this.allUsers.push(...users2)
+      this.pageIsLoaded =true
+
     },
   }
 </script>
