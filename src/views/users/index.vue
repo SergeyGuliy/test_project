@@ -1,11 +1,15 @@
 <template>
   <div>
-    <p>HHHH</p>
+    <v-breadcrumbs :items="items"></v-breadcrumbs>
     <ol>
       <li v-for="user in users" :key="user.id">
-        <router-link :to="{ name: 'User', params: {id: user.id}}">{{ user.name }}</router-link>
+        <router-link :to="{ name: 'User', params: {id: user.id}}">{{ user.first_name }}</router-link>
       </li>
     </ol>
+    <v-pagination
+            v-model="page"
+            :length="2"
+     />
   </div>
 </template>
 
@@ -15,12 +19,29 @@
     data(){
       return {
         users: null,
-        loading: true
+        loading: true,
+        page: 1,
+        items: [
+          {
+            text: 'Home Page',
+            disabled: false,
+            to: '/',
+          },
+          {
+            text: 'Users List',
+            disabled: false,
+            to: '/users',
+          },
+        ],
       }
     },
     async mounted() {
-      this.users = (await this.$axios.get("https://jsonplaceholder.typicode.com/users")).data
+      this.page = this.$route.query.page || 1
+      this.users = (await this.$axios.get(`https://reqres.in/api/users?page=${this.page}`)).data.data;
       console.log(this.users)
+    },
+    async updated() {
+      this.users = (await this.$axios.get(`https://reqres.in/api/users?page=${this.page}`)).data.data;
     }
   }
 </script>
